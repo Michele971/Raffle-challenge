@@ -94,6 +94,8 @@ export const main = Reach.App(() => {
         //A.interact.log("counter ", users_counter)
         const value_bob = fromSome(mapUserNumbers[this], 0);
         const outcome_result = compute_winner(value_bob, winningNum);
+        // A.interact.log(value_bob, ' - ', winningNum);
+        // A.interact.log(outcome_result,' - ', USER_WIN);
         if(outcome_result == USER_WIN){ //check if the number, associated to my address in the map, is the winning number
           y(true);
           return [false, users_counter - 1, this]; //stop the loop, setting keepGoing to false
@@ -107,16 +109,12 @@ export const main = Reach.App(() => {
 
     commit();
     A.publish();
-
-
     
   if (balance(nftID) >= amt){
     transfer(amt, nftID).to(winner);
-    //sendOutcome(USER_WIN);
   }
   if (balance() > 0){
     transfer(balance()).to(A);
-    //sendOutcome(USER_LOOSE);
   }
 
   commit();

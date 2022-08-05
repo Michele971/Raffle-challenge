@@ -29,7 +29,7 @@ console.log("starting backend ...");
 
 const OUTCOME = ['Your nombe is not a match', 'Your number matches!'];
 
-const NUM_TICKETS_USERS = 10;
+const NUM_TICKETS_USERS = 5;
 
 
 const Shared = {
@@ -77,7 +77,7 @@ const startsBob = async () => {
       await newBob(nameBob);
       console.log(`Attaching ${nameBob}`);
       const result = await attachBob(Shared.getNum(nftParams.numTickets));
-      //await stdlib.wait(1);
+      await stdlib.wait(1);
 
       //inserting in the array only if bob has inserted the number
       if (result){
@@ -88,7 +88,7 @@ const startsBob = async () => {
   console.log(`Users are going to check who is the winner `);
   await stdlib.wait(1)
   for(var i = 0; i<NUM_TICKETS_USERS; i++){
-    await stdlib.wait(2)
+    await stdlib.wait(5)
     const ctc2 = accArray[i].contract(backend, ctcAlice.getInfo());
     const winnerAPI_Attachers = ctc2.a.attachersAPI;
     const winner_result = await call(() => winnerAPI_Attachers.checkWinner());
