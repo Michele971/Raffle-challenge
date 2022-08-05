@@ -96,7 +96,7 @@ export const main = Reach.App(() => {
         const outcome_result = compute_winner(value_bob, winningNum);
         if(outcome_result == USER_WIN){ //check if the number, associated to my address in the map, is the winning number
           y(true);
-          return [false, users_counter - 1, this,]; //stop the loop, setting keepGoing to false
+          return [false, users_counter - 1, this]; //stop the loop, setting keepGoing to false
         }else{
           y(false); //return false which means that you are not whe winner
           return [true, users_counter - 1, A]; //the loop keep going on
