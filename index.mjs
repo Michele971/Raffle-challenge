@@ -2,6 +2,9 @@ import {loadStdlib} from '@reach-sh/stdlib';
 import * as backend from './build/index.main.mjs';
 const stdlib = loadStdlib(process.env);
 
+// get balance of NFTs
+const getBalance = async (who) => await who.balanceOf(nftParams.nftID);
+var winnerAcc = null;
 //setting the call for reach api
 const call = async (f) => {
   let res = undefined;
@@ -26,7 +29,7 @@ console.log("starting backend ...");
 
 const OUTCOME = ['Your nombe is not a match', 'Your number matches!'];
 
-const NUM_TICKETS_USERS = 3;
+const NUM_TICKETS_USERS = 10;
 
 
 const Shared = {
@@ -74,25 +77,26 @@ const startsBob = async () => {
       await newBob(nameBob);
       console.log(`Attaching ${nameBob}`);
       const result = await attachBob(Shared.getNum(nftParams.numTickets));
-      await stdlib.wait(1);
+      //await stdlib.wait(1);
 
       //inserting in the array only if bob has inserted the number
       if (result){
           accArray.push(acc);
       }
-    }
+  }
 
   console.log(`Users are going to check who is the winner `);
   await stdlib.wait(1)
   for(var i = 0; i<NUM_TICKETS_USERS; i++){
-    await stdlib.wait(5)
+    await stdlib.wait(2)
     const ctc2 = accArray[i].contract(backend, ctcAlice.getInfo());
     const winnerAPI_Attachers = ctc2.a.attachersAPI;
     const winner_result = await call(() => winnerAPI_Attachers.checkWinner());
     //check the winners
     const result_winner = (winner_result ? `${accArray[i].getAddress()} have won` : `${accArray[i].getAddress()} have not won`);
-    console.log(`Output: ${result_winner}`);
+    console.log(`Output user${i}: ${result_winner}`);
     if(winner_result){ //if there is a winner, stop calling api process
+      winnerAcc = accArray[i];
       break;
     } 
   }
@@ -125,9 +129,24 @@ interact.ready = async() => {
 interact.log = async (...args) => {
   console.log(...args)
 }; 
+
+interact.showWinningNum = async(win_num) => {
+  console.log(`The winning number is: ${win_num}`);
+} 
+
+interact.sendOutcome = async(outcome) => {
+  console.log(`The outcome is ${outcome}`);
+}
+
+
 const part = backend.Alice;
 await part(ctcAlice, interact);
+console.log("\n")
+if (winnerAcc){
+  console.log(`WINNER ACCOUNT: The NFT tokens balance for ${winnerAcc.getAddress()} is: ${await getBalance(winnerAcc)}`);
+}else{
+  console.log(`WINNER ACCOUNT: The NFT tokens balance for Alice account ${accAlice.getAddress()} is: ${await getBalance(accAlice)}`);
+}
 
-
-console.log("The lottery is over.")
+console.log("The raffle is over.")
 console.log('Goodbye, Alice and Users!');
